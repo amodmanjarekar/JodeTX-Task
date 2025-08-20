@@ -1,0 +1,24 @@
+<h2>Register</h2>
+
+<form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
+    <label for="reg-name">Name</label>
+    <input id="reg-name" type="text" formControlName="name" required /><br />
+
+    <label for="reg-email">Email</label>
+    <input id="reg-email" type="text" formControlName="email" required /><br />
+
+    <label for="reg-phone">Phone</label>
+    <input id="reg-phone" type="text" formControlName="phone" required /><br />
+
+    <label for="reg-pass">Password</label>
+    <input id="reg-pass" type="password" formControlName="password" required /><br />
+
+    <label for="reg-repass">Re-type password</label>
+    <input id="reg-repass" type="password" formControlName="repassword" required /><br />
+
+    <input id="reg-submit" type="submit" value="Register" />
+</form>
+
+<p>Form status: {{ registerForm.status }}</p>
+
+<button (click)="showLogin()">login?</button>
