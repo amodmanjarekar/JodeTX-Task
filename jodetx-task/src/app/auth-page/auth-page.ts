@@ -53,7 +53,6 @@ export class AuthRegister {
   private http = inject(HttpClient);
 
   onRegisterSubmit() {
-    console.log(environment.SERVER_URL);
     if (
       this.registerForm.valid &&
       this.registerForm.get('password')?.value === this.registerForm.get('repassword')?.value
