@@ -39,6 +39,8 @@ export class AuthLogin {
       next: (res: any) => {
         localStorage.setItem("access_token", res.access_token)
         this.authService.isLoggedIn = true;
+        this.authService.username = res.username,
+        this.authService.phone = res.phone,
         this.router.navigate(["/"])
       },
       error: (err) => {

@@ -14,7 +14,7 @@ export class AuthService {
   async signIn(
     phone: string,
     password: string,
-  ): Promise<{ access_token: string }> {
+  ): Promise<Object> {
     const admin = await this.adminsService.findByPhone(phone);
     if (admin?.password !== password) {
         console.log(admin?.password, password)
@@ -24,6 +24,8 @@ export class AuthService {
     const payload = { username: admin.name };
     return {
         access_token: await this.jwtService.signAsync(payload),
+        username: admin.name,
+        phone: admin.phone,
     }
   }
 }

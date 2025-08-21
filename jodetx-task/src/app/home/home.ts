@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { csv2json, json2csv } from 'json-2-csv';
 import { Router } from '@angular/router';
+import { Auth } from '../auth';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +19,9 @@ import { Router } from '@angular/router';
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
+  private authService = inject(Auth);
+  username = this.authService.username;
+
   private http = inject(HttpClient);
 
   headers = new HttpHeaders({
@@ -37,7 +41,6 @@ export class Home implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(localStorage.getItem('access_token'));
     this.getEmployees();
   }
 
