@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import {
@@ -9,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { csv2json, json2csv } from 'json-2-csv';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -19,14 +20,24 @@ import { csv2json, json2csv } from 'json-2-csv';
 export class Home implements OnInit {
   private http = inject(HttpClient);
 
+  headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+  });
+
   employees: any[] = [];
   private getEmployees() {
-    this.http.get(`${environment.SERVER_URL}/employees`).subscribe((data) => {
-      this.employees = Object.values(data);
-    });
+    this.http
+      .get(`${environment.SERVER_URL}/employees`, {
+        headers: this.headers,
+      })
+      .subscribe((data) => {
+        this.employees = Object.values(data);
+      });
   }
 
   ngOnInit(): void {
+    console.log(localStorage.getItem('access_token'));
     this.getEmployees();
   }
 
@@ -39,14 +50,16 @@ export class Home implements OnInit {
   });
 
   onEmployeeSubmit() {
+    let employee = {
+      firstname: this.employeeForm.get('firstname')?.value,
+      lastname: this.employeeForm.get('lastname')?.value,
+      email: this.employeeForm.get('email')?.value,
+      salary: this.employeeForm.get('salary')?.value,
+      team: this.employeeForm.get('team')?.value,
+    };
+
     this.http
-      .post(`${environment.SERVER_URL}/employees/new`, {
-        firstname: this.employeeForm.get('firstname')?.value,
-        lastname: this.employeeForm.get('lastname')?.value,
-        email: this.employeeForm.get('email')?.value,
-        salary: this.employeeForm.get('salary')?.value,
-        team: this.employeeForm.get('team')?.value,
-      })
+      .post(`${environment.SERVER_URL}/employees/new`, employee, { headers: this.headers })
       .subscribe({
         next: (data) => {
           this.getEmployees();
@@ -94,14 +107,25 @@ export class Home implements OnInit {
 
   uploadEmployees() {
     if (this.newEmployees.length > 0) {
-      this.http.post(`${environment.SERVER_URL}/employees/bulk`, this.newEmployees).subscribe({
-        next: () => {
-          this.getEmployees();
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+      this.http
+        .post(`${environment.SERVER_URL}/employees/bulk`, this.newEmployees, {
+          headers: this.headers,
+        })
+        .subscribe({
+          next: () => {
+            this.getEmployees();
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
     }
+  }
+
+  router = inject(Router);
+
+  onLogout() {
+    localStorage.clear();
+    this.router.navigate(['/auth']);
   }
 }

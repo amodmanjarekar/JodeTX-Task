@@ -1,13 +1,13 @@
 <h2>Login</h2>
 
 <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
-    <label for="reg-phone">Phone</label>
-    <input id="reg-phone" type="text" formControlName="phone" required /><br />
+    <label for="login-phone">Phone</label>
+    <input id="login-phone" type="text" formControlName="phone" required /><br />
 
-    <label for="reg-pass">Password</label>
-    <input id="reg-pass" type="password" formControlName="password" required /><br />
+    <label for="login-pass">Password</label>
+    <input id="login-pass" type="password" formControlName="password" required /><br />
 
-    <input id="reg-submit" type="submit" value="Login" />
+    <input id="login-submit" type="submit" value="Login" />
 </form>
 
 <p>Form status: {{ loginForm.status }}</p>

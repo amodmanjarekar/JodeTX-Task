@@ -3,6 +3,8 @@ import { NgComponentOutlet } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { Auth } from '../auth';
+import { Router } from '@angular/router';
 
 const isLogin = signal(true);
 
@@ -25,7 +27,25 @@ export class AuthLogin {
     password: new FormControl('', Validators.required),
   });
 
-  onLoginSubmit() {}
+  private http = inject(HttpClient);
+  private authService = inject(Auth);
+  private router = inject(Router);
+
+  onLoginSubmit() {
+    this.http.post(`${environment.SERVER_URL}/auth/signin`, {
+      phone: this.loginForm.get("phone")?.value,
+      password: this.loginForm.get("password")?.value,
+    }).subscribe({
+      next: (res: any) => {
+        localStorage.setItem("access_token", res.access_token)
+        this.authService.isLoggedIn = true;
+        this.router.navigate(["/"])
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
 }
 
 @Component({
