@@ -12,6 +12,11 @@ export class EmployeesController {
     return this.employeesService.create(createEmployeeDto);
   }
 
+  @Post("bulk")
+  bulkInsert(@Body() employees: CreateEmployeeDto[]) {
+    return this.employeesService.bulkInsert(employees);
+  }
+
   @Get()
   findAll() {[]
     return this.employeesService.findAll();

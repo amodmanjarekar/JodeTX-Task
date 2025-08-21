@@ -10,17 +10,16 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     AdminsModule,
-    // MongooseModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   inject: [ConfigService],
-    //   useFactory: async (config: ConfigService) => ({
-    //     uri: config.get<string>('MONGO_URI')
-    //   })
-    // })
     ConfigModule.forRoot(),
-    MongooseModule.forRoot("mongodb+srv://amod:123qweasd@jode-cluster.vdo9von.mongodb.net/?retryWrites=true&w=majority&appName=jode-cluster"),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => ({
+        uri: config.get<string>('MONGO_URI'),
+      }),
+    }),
     EmployeesModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

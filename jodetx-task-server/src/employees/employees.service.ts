@@ -17,21 +17,16 @@ export class EmployeesService {
     @InjectModel(Employee.name) private employeeModel: Model<Employee>,
   ) {}
 
-  async create(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
-    const existing = await this.employeeModel.find({
-      email: createEmployeeDto.email,
-    });
-
-    if (existing.length > 0) {
-      throw new BadRequestException('Duplicate email');
-    } else {
-      try {
-        const newEmployee = await this.employeeModel.create(createEmployeeDto);
-        return newEmployee;
-      } catch (err) {
-        console.log(err);
-        throw new InternalServerErrorException('Something bad happened');
-      }
+  async create(createEmployeeDto: CreateEmployeeDto): Promise<any> {
+    try {
+      const newEmployee = await this.employeeModel.updateOne(
+        {email: createEmployeeDto.email},
+        createEmployeeDto,
+        {upsert: true}
+      );
+      return newEmployee
+    } catch (err) {
+      throw new InternalServerErrorException('Something Bad Happened');
     }
   }
 
@@ -41,7 +36,22 @@ export class EmployeesService {
       return Employees;
     } catch (err) {
       console.log(err);
-      throw new Error('Something bad happened');
+      throw new InternalServerErrorException("Something bad happened");
+    }
+  }
+
+  async bulkInsert(employees: CreateEmployeeDto[]) {
+    try {
+      const BulkResult = await this.employeeModel.bulkWrite(employees.map( employee => ({
+        updateOne: {
+          filter: {email: employee.email},
+          update: employee,
+          upsert: true,
+        }
+      })));
+      return BulkResult;
+    } catch (err) {
+      throw new InternalServerErrorException('Something bad happened');
     }
   }
 
