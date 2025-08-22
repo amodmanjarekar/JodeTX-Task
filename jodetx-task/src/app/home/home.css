@@ -123,3 +123,14 @@ form input {
 .bin-btn:hover svg {
   color: red;
 }
+
+@media screen and (width <= 70em) {
+  .home {
+    height: auto;
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+}

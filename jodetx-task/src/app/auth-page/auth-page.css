@@ -10,6 +10,7 @@
 .auth {
   padding: 1em;
   width: 30em;
+  max-width: 80vw;
   border-radius: 1em;
   color: white;
   background: linear-gradient(#fff3, #fff1);
