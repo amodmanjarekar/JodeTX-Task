@@ -1,6 +1,7 @@
-<h2>Register</h2>
+<div class="auth register">
+  <h2>Register</h2>
 
-<form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
+  <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
     <label for="reg-name">Name</label>
     <input id="reg-name" type="text" formControlName="name" required /><br />
 
@@ -16,9 +17,8 @@
     <label for="reg-repass">Re-type password</label>
     <input id="reg-repass" type="password" formControlName="repassword" required /><br />
 
-    <input id="reg-submit" type="submit" value="Register" />
-</form>
+    <input class="submit-btn" id="reg-submit" type="submit" value="Register" [disabled]="!registerForm.valid" />
+  </form>
 
-<p>Form status: {{ registerForm.status }}</p>
-
-<button (click)="showLogin()">login?</button>
+  <p>Already have an account? <a (click)="showLogin()">Login</a>.</p>
+</div>

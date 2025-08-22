@@ -1,0 +1,95 @@
+.home {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    background-color: rebeccapurple;
+    box-sizing: border-box;
+    color: white;
+    height: 100%;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.sidebar span {
+    color:turquoise;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.sidebar button, .sidebar .btn {
+    background-color: #fff3;
+    color: white;
+    border: 2px solid #fff0 !important;
+    border-radius: 2em;
+    padding: 0.5em;
+    margin: 0.5em 0;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sidebar button:hover, .sidebar .btn:hover {
+    box-shadow: 0 0 8px #0007;
+    border: 2px solid #fff4 !important;
+}
+
+.form form{
+    display: flex;
+    flex-direction: column;
+}
+
+.form form input {
+    margin: 0.5em 0;
+    padding: 0.5em 1em;
+    border-radius: 2em;
+    border: none;
+}
+
+.bulk {
+    display: flex;
+    flex-direction: column;
+}
+
+.bulk .btn-dl {
+    margin-top: 2em;
+}
+
+/* TABLE */
+
+.table {
+    max-height: 100vh;
+    flex-grow: 1;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    padding: 1em;
+}
+
+.table table {
+    width: 100%;
+    border-radius: 2em;
+    box-shadow: 0 0 0 1px #0003;
+    overflow: hidden;
+}
+
+.table th, .table  td {
+    padding: 1em;
+    text-align: center;
+}
+
+.table  th {
+    background-color: #a9b3;
+}
+
+.table  tr {
+    border-bottom: 1px solid #0003;
+}
+
+.table tr:last-of-type {
+    border-bottom: none;
+}
