@@ -1,3 +1,3 @@
 export const environment = {
-    SERVER_URL: "jodetx-task-production.up.railway.app"
+    SERVER_URL: "https://jodetx-task-production.up.railway.app"
 };
