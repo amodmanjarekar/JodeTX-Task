@@ -8,7 +8,22 @@
     <label for="login-pass">Password</label>
     <input id="login-pass" type="password" formControlName="password" required /><br />
 
-    <input class="submit-btn" id="login-submit" type="submit" value="Login" [disabled]="!loginForm.valid" />
+    @if (loginForm.touched || loginForm.dirty) { 
+      @if (loginForm.get("phone")?.hasError("required")) {
+    <span class="error">Phone is required.</span>
+    } @else if (loginForm.get("phone")?.invalid) {
+    <span class="error">Phone number must be 10-digits</span>
+    }
+     @else if (loginForm.get("password")?.hasError("required")) {
+    <span class="error">Password is required.</span>
+    } }
+    <input
+      class="submit-btn"
+      id="login-submit"
+      type="submit"
+      value="Login"
+      [disabled]="!loginForm.valid"
+    />
   </form>
 
   <p>Don't have an account? <a (click)="showRegister()">Register</a>.</p>

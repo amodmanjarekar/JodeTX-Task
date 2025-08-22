@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rebeccapurple;
+  background-color: #426;
 }
 
 .auth {
@@ -12,7 +12,8 @@
   width: 30em;
   border-radius: 1em;
   color: white;
-  background: linear-gradient(#fff5, #fff2);
+  background: linear-gradient(#fff3, #fff1);
+  box-shadow: 0 0 32px #000a;
 }
 
 .auth h2 {
@@ -26,7 +27,7 @@
 }
 
 .auth form label {
-    margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .auth form input {
@@ -39,22 +40,31 @@
 }
 
 .auth form .submit-btn {
-    color: black;
-    background: linear-gradient(#ff7, #ff0);
-    cursor: pointer;
+  color: black;
+  background: linear-gradient(#ff7, #ff0);
+  cursor: pointer;
 }
 
 .auth form .submit-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .auth p {
-    margin-top: 2em;
+  margin-top: 2em;
 }
 
 .auth a {
-    color: #ff0;
-    text-decoration: underline;
-    cursor: pointer;
+  color: #ff0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.auth .error {
+  background-color: #f005;
+  border: 1px solid #f00a;
+  border-radius: 8px;
+  padding: 0.5em;
+  margin: 0.5em 0;
+  color: #f77;
 }

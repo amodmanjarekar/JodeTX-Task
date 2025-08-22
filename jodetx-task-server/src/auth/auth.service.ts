@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Admin } from 'src/admins/admin.schema';
@@ -17,8 +17,7 @@ export class AuthService {
   ): Promise<Object> {
     const admin = await this.adminsService.findByPhone(phone);
     if (admin?.password !== password) {
-        console.log(admin?.password, password)
-      throw new UnauthorizedException();
+      throw new HttpException("Incorrect Password", HttpStatus.UNAUTHORIZED);
     }
 
     const payload = { username: admin.name };

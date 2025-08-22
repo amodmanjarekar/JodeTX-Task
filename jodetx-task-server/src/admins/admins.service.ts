@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -14,9 +14,22 @@ export class AdminsService {
     return admins;
   }
 
-  async create(createAdminDto: CreateAdminDto): Promise<Admin> {
-    const newAdmin = await this.adminModel.create(createAdminDto);
-    return newAdmin;
+  async create(createAdminDto: CreateAdminDto): Promise<Admin | any> {
+    try {
+      const existing = await this.adminModel.findOne({
+        phone: createAdminDto.phone,
+      });
+
+      if (existing) {
+        throw new HttpException("Phone already exists", HttpStatus.UNPROCESSABLE_ENTITY);
+      }
+
+      const newAdmin = await this.adminModel.create(createAdminDto);
+      return newAdmin;
+
+    } catch (err) {
+      return err;
+    }
   }
 
   async findByPhone(phone: string): Promise<Admin | any> {

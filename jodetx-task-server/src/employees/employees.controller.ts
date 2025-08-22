@@ -27,8 +27,8 @@ export class EmployeesController {
   }
 
   @UseGuards(AuthGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.employeesService.remove(+id);
+  @Delete('delete/:email')
+  remove(@Param('email') email: string) {
+    return this.employeesService.remove(email);
   }
 }

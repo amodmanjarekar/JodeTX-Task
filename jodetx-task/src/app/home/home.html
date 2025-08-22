@@ -1,14 +1,37 @@
 <div class="home">
   <div class="sidebar">
     <p>
-      Welcome, <span>{{ username }}</span
+      Welcome to the JodeTX Employee Portal, <span>{{ username }}</span
       >!
     </p>
     <button (click)="onLogout()">Logout</button>
 
+    <div class="filters">
+      <h3>Filter by date</h3>
+      <form [formGroup]="filterForm" (ngSubmit)="onFilter()">
+        <label for="startdate">Start Date:</label>
+        <input for="startdate" type="date" formControlName="startdate" />
+        <label for="enddate">End Date:</label>
+        <input for="enddate" type="date" formControlName="enddate" />
+
+        @if (filterForm.touched || filterForm.dirty) { @if (filterForm.hasError("smallerStartDate"))
+        {
+        <span class="error">Start date cannot be smaller than end date.</span>
+        } }
+        <input class="btn" type="submit" value="Filter" [disabled]="!filterForm.valid" />
+        <input
+          class="btn"
+          type="button"
+          value="Clear"
+          (click)="clearFilter()"
+          [disabled]="!isFiltered"
+        />
+      </form>
+    </div>
+
     <div class="form">
       <form [formGroup]="employeeForm" (ngSubmit)="onEmployeeSubmit()">
-        <h3>Add Employee:</h3>
+        <h3>Add Employee</h3>
         <input
           id="firstname"
           type="text"
@@ -16,20 +39,32 @@
           formControlName="firstname"
           required
         />
-        <br />
-        <input id="lastname" type="text" placeholder="Last Name" formControlName="lastname" /> <br />
-        <input id="email" type="text" placeholder="Email" formControlName="email" required /> <br />
-        <input id="salary" type="text" placeholder="Salary" formControlName="salary" /> <br />
-        <input id="team" type="text" placeholder="Team" formControlName="team" required /> <br />
+        <input id="lastname" type="text" placeholder="Last Name" formControlName="lastname" />
+        <input id="email" type="text" placeholder="Email" formControlName="email" required />
+        <input id="salary" type="text" placeholder="Salary" formControlName="salary" />
+        <input id="joindate" type="date" placeholder="Joining Date" value="2025-08-23" required />
+        <input id="team" type="text" placeholder="Team" formControlName="team" required />
 
-        <input class="btn" type="submit" value="Add" />
+        @if (employeeForm.touched || employeeForm.dirty) { @if
+        (employeeForm.get("firstname")?.hasError("required")) {
+        <span class="error">First name is required</span>
+        } @else if (employeeForm.get("email")?.hasError("required")) {
+        <span class="error">Email is required</span>
+        } @else if (employeeForm.get("email")?.invalid) {
+        <span class="error">Please enter a proper email</span>
+        } @else if (employeeForm.get("joindate")?.hasError("required")) {
+        <span class="error">Joining date is required</span>
+        } @else if (employeeForm.get("team")?.hasError("required")) {
+        <span class="error">Team is required</span>
+        } }
+        <input class="btn" type="submit" value="Add" [disabled]="!employeeForm.valid" />
       </form>
     </div>
 
     <div class="bulk">
       <h3>Bulk Upload</h3>
       <input type="file" (change)="onUploadFile($event)" accept=".csv" /> <br />
-      <button (click)="uploadEmployees()">Upload</button>
+      <button (click)="uploadEmployees()" [disabled]="newEmployees.length < 1">Upload</button>
       <button class="btn-dl" (click)="downloadEmployees()">Download CSV</button>
     </div>
   </div>
@@ -41,16 +76,40 @@
         <th>Last Name</th>
         <th>Email</th>
         <th>Salary</th>
+        <th>Joining Date</th>
         <th>Team</th>
+        <th>Action</th>
       </tr>
-      @for (employee of employees; track employee.email) {
+      @for (employee of filtered; track employee.email) {
       <tr>
         <!-- <td colspan="5">{{ employees }}</td> -->
         <td>{{ employee.firstname }}</td>
         <td>{{ employee.lastname }}</td>
         <td>{{ employee.email }}</td>
         <td>{{ employee.salary }}</td>
+        <td>{{ employee.joindate }}</td>
         <td>{{ employee.team }}</td>
+        <td>
+          <button class="bin-btn" (click)="onDelete(employee.email)">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path
+                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+              ></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+          </button>
+        </td>
       </tr>
       }
     </table>

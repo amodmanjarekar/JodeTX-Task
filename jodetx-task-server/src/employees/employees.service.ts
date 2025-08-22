@@ -1,7 +1,4 @@
 import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -55,7 +52,11 @@ export class EmployeesService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} employee`;
+  async remove(email: string) {
+    try {
+      const removed = await this.employeeModel.deleteOne({email: email});
+    } catch (err) {
+      throw new InternalServerErrorException('Something bad happened');
+    }
   }
 }

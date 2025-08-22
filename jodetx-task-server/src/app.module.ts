@@ -10,7 +10,9 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     AdminsModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

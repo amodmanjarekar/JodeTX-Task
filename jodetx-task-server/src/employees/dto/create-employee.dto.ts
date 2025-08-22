@@ -3,5 +3,6 @@ export class CreateEmployeeDto {
         lastname: string;
         email: string;
         salary: number;
+        date: Date;
         team: string;
 }

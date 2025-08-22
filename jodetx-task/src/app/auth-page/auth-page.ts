@@ -1,6 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Auth } from '../auth';
@@ -32,21 +40,28 @@ export class AuthLogin {
   private router = inject(Router);
 
   onLoginSubmit() {
-    this.http.post(`${environment.SERVER_URL}/auth/signin`, {
-      phone: this.loginForm.get("phone")?.value,
-      password: this.loginForm.get("password")?.value,
-    }).subscribe({
-      next: (res: any) => {
-        localStorage.setItem("access_token", res.access_token)
-        this.authService.isLoggedIn = true;
-        this.authService.username = res.username,
-        this.authService.phone = res.phone,
-        this.router.navigate(["/"])
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    this.http
+      .post(`${environment.SERVER_URL}/auth/signin`, {
+        phone: this.loginForm.get('phone')?.value,
+        password: this.loginForm.get('password')?.value,
+      })
+      .subscribe({
+        next: (res: any) => {
+          localStorage.setItem('access_token', res.access_token);
+          this.authService.isLoggedIn = true;
+          (this.authService.username = res.username),
+            (this.authService.phone = res.phone),
+            this.router.navigate(['/']);
+        },
+        error: (err) => {
+          console.log(err);
+          if(err.status == 401) {
+            alert("Incorrect password.");
+          } else {
+            alert(err.message);
+          }
+        },
+      });
   }
 }
 
@@ -61,42 +76,50 @@ export class AuthRegister {
     isLogin.set(true);
   }
 
-  registerForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    email: new FormControl('a@b.c', Validators.compose([Validators.required, Validators.email])),
-    phone: new FormControl(
-      '',
-      Validators.compose([Validators.required, Validators.pattern('[- +()0-9]{10,}')])
-    ),
-    password: new FormControl('', Validators.required),
-    repassword: new FormControl('', Validators.required),
-  });
+  passwordValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const pass = control.get('password')?.value;
+    const repass = control.get('repassword')?.value;
+
+    return pass == repass ? null : { passNotMatch: 'true' };
+  };
+
+  registerForm = new FormGroup(
+    {
+      name: new FormControl('', Validators.required),
+      email: new FormControl('', Validators.compose([Validators.required, Validators.email])),
+      phone: new FormControl(
+        '',
+        Validators.compose([Validators.required, Validators.pattern('[- +()0-9]{10,}')])
+      ),
+      password: new FormControl('', Validators.required),
+      repassword: new FormControl('', Validators.required),
+    },
+    { validators: this.passwordValidator }
+  );
 
   private http = inject(HttpClient);
 
   onRegisterSubmit() {
-    if (
-      this.registerForm.valid &&
-      this.registerForm.get('password')?.value === this.registerForm.get('repassword')?.value
-    ) {
-      this.http
-        .post(`${environment.SERVER_URL}/admins`, {
-          name: this.registerForm.get('name')?.value,
-          phone: this.registerForm.get('phone')?.value,
-          email: this.registerForm.get('email')?.value,
-          password: this.registerForm.get('password')?.value,
-        })
-        .subscribe({
-          next: (data) => {
+    this.http
+      .post(`${environment.SERVER_URL}/admins`, {
+        name: this.registerForm.get('name')?.value,
+        phone: this.registerForm.get('phone')?.value,
+        email: this.registerForm.get('email')?.value,
+        password: this.registerForm.get('password')?.value,
+      })
+      .subscribe({
+        next: (data: any) => {
+          if (data.message == "Phone already exists") {
+            alert("Phone already exists. Please try again with a different phone number.");
+          } else {
+            alert("New admin registered successfully.");
             isLogin.set(true);
-          },
-          error: (err) => {
-            console.log(err);
-          },
-        });
-    } else {
-      return;
-    }
+          }
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
   }
 }
 

@@ -17,7 +17,32 @@
     <label for="reg-repass">Re-type password</label>
     <input id="reg-repass" type="password" formControlName="repassword" required /><br />
 
-    <input class="submit-btn" id="reg-submit" type="submit" value="Register" [disabled]="!registerForm.valid" />
+    @if (registerForm.touched || registerForm.dirty) { @if
+    (registerForm.get("name")?.hasError("required")) {
+    <span class="error">Name is required.</span>
+    } @else if (registerForm.get("email")?.hasError("required")) {
+    <span class="error">Email is required.</span>
+    } @else if (registerForm.get("email")?.invalid) {
+    <span class="error">Please enter a proper email.</span>
+    } @else if (registerForm.get("phone")?.hasError("required")) {
+    <span class="error">Phone is required.</span>
+    } @else if (registerForm.get("phone")?.invalid) {
+    <span class="error">Phone number must be atleast 10-digits.</span>
+    } @else if (registerForm.get("password")?.hasError("required")) {
+    <span class="error">Password is required.</span>
+    } @else if (registerForm.get("repassword")?.hasError("required")) {
+    <span class="error">Please re-enter the password.</span>
+    } @else if (registerForm.hasError("passNotMatch")) {
+    <span class="error">Passwords must match.</span>
+    } }
+
+    <input
+      class="submit-btn"
+      id="reg-submit"
+      type="submit"
+      value="Register"
+      [disabled]="!registerForm.valid"
+    />
   </form>
 
   <p>Already have an account? <a (click)="showLogin()">Login</a>.</p>

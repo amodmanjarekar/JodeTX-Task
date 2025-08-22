@@ -17,6 +17,9 @@ export class Employee {
   @Prop()
   salary: number;
 
+  @Prop({required: true})
+  joindate: Date;
+
   @Prop({ required: true })
   team: string;
 }
