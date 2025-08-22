@@ -1,4 +1,3 @@
 export const environment = {
-    production: false,
-    SERVER_URL: "http://localhost:3000"
+    SERVER_URL: "jodetx-task-production.up.railway.app"
 };
